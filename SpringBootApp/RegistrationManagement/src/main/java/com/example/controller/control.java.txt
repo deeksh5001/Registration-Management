@@ -1,0 +1,57 @@
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.Participant;
+import com.example.demo.repository.P_Repo;
+
+@RestController
+public class control 
+{
+	@Autowired
+	P_Repo pr;
+	
+	@PostMapping("/save")
+	public String pt(@RequestBody Participant s11)
+	{
+		pr.save(s11);
+		return "Your record has been saved";
+		
+	}
+	
+	@PutMapping("/update")
+	public String update(@RequestBody Participant s11)
+	{
+		pr.save(s11);
+		return "Your record has been updated";
+	}
+
+	 @GetMapping("/fetchAll")
+	 public List<Participant> get()
+	 {
+		 return pr.findAll();
+
+	 }
+	 
+	 @GetMapping("/search/{id}")
+	 public Participant searchP(@PathVariable int id)
+	 {
+		return pr.findById(id).get();
+	 }
+	 
+	 @DeleteMapping("/delete/{id}")
+	 public String delete(@PathVariable int id)
+	 {
+		 pr.deleteById(id);
+		 return "id:"+id+" has been deleted";
+	 }
+}
