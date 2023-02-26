@@ -1,0 +1,132 @@
+package com.example.demo.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.entity.Participant;
+import com.example.demo.service.ParticipantService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
+@RestController
+@CrossOrigin
+public class ParticipantController 
+{
+	@Autowired
+	private ParticipantService participantService;
+	
+	
+	@Operation(summary = "Creates a new student")
+	@ApiResponses(value = {@ApiResponse(responseCode = "201",description = "Student created successfully"),
+							@ApiResponse(responseCode ="400", description ="Student is invalid")})
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(produces ="application/json" , consumes = "application/json" ,value="/save")
+	public ResponseEntity<Participant> create(@RequestBody Participant participant)
+	{
+		Participant createdParticipant=participantService.create(participant);
+		return ResponseEntity.ok(createdParticipant);
+	}
+	
+	
+	@Operation(summary = "Get a Student with given id")
+	@ApiResponses(value = {@ApiResponse(responseCode ="200",description= "getting student successfully"),
+							@ApiResponse(responseCode ="401", description ="Invalid credentials"),
+							@ApiResponse(responseCode ="404", description ="Student not found")})
+	@GetMapping(value = "/{id}",produces="application/json")
+	public ResponseEntity<Optional<Participant>> read(final @PathVariable int id)
+	{
+		Optional<Participant> participant = participantService.getById(id);
+		return ResponseEntity.ok(participant);
+	}
+	
+	
+	@Operation(summary = "Update a Student with given id")
+	@ApiResponses(value = {@ApiResponse(responseCode ="200",description= "student updated successfully"),
+							@ApiResponse(responseCode ="400", description ="Student is invalid"),
+							@ApiResponse(responseCode ="401", description ="Invalid credentials"),
+							@ApiResponse(responseCode ="404", description ="Student not found")})
+	@PutMapping(value = "/updateParticipant",produces="application/json", consumes = "application/json")
+	public ResponseEntity<Participant> update(final @RequestBody Participant participant) 
+			throws JsonProcessingException
+	{
+		final Participant updatedStudent=participantService.update(participant);
+		return ResponseEntity.ok(updatedStudent);
+	}
+	
+	
+	@Operation(summary = "Deletes a Student with given id")
+	@ApiResponses(value = {@ApiResponse(responseCode ="200",description= "student deleted successfully"),
+							@ApiResponse(responseCode ="401", description ="Invalid credentials"),
+							@ApiResponse(responseCode ="404", description ="Student not found")})
+	@DeleteMapping(value = "/{id}")
+	public void delete(final @PathVariable int id)
+	{
+		participantService.delete(id);
+	}
+	
+	//SORT
+		@Operation(summary = "Sort by given fieldName")
+		 @GetMapping("/sortBy/{fieldName}")
+		 public Iterable<Participant> sortBy(@PathVariable String fieldName)
+		 {
+			 return participantService.sortParticipant(fieldName);
+		 }
+		 
+		 //PAGE
+		@Operation(summary = "Provide the requested page")
+		@ApiResponses(value = {@ApiResponse(responseCode ="200",description= "Page displayed successfully"),
+								@ApiResponse(responseCode ="401", description ="Invalid page no")})
+		 @GetMapping("/page/{p_no}")
+		 public List<Participant> getp1(@PathVariable int p_no)
+		 {
+			 return participantService.getPage(p_no);
+		 }
+		 
+		 //double sort
+		
+		 @Operation(summary = "Sort by given fieldNames")
+		 @ApiResponses(value = {@ApiResponse(responseCode ="200",description= "Displayed successfully"),
+				 @ApiResponse(responseCode ="401", description ="Invalid fieldname")})
+		 @GetMapping("sortByFields/{field1}/{field2}")
+		 public Iterable<Participant> dsort(@PathVariable String field1,@PathVariable String field2)
+		 {
+			 return participantService.sortByFields(field1, field2);
+		 }
+		 
+		 //SORTED PAGES
+		 @Operation(summary = "Sort by given fieldName and proviide the requested page")
+		 @ApiResponses(value = {@ApiResponse(responseCode ="200",description= "Sorted page displayed successfully"),
+				 @ApiResponse(responseCode ="401", description ="Invalid page no/fieldname")})
+		 @GetMapping("/sortPagesBy/{fieldName}/{p_no}")
+		 public List<Participant> sp(@PathVariable String fieldName,@PathVariable int p_no)
+		 {
+			 return participantService.sortPage(fieldName, p_no);
+		 }
+		 
+		 
+		 @Operation(summary = "Get Students of given eventType")
+		 @ApiResponses(value = {@ApiResponse(responseCode ="200",description= "Displayed successfully"),
+				 @ApiResponse(responseCode ="401", description ="Invalid eventType")})
+		 @GetMapping("/getParticipantsOf/{event}")
+		 public List<Participant> getP(@PathVariable String event)
+		 {
+			 return participantService.getP1(event);
+		 }
+
+}

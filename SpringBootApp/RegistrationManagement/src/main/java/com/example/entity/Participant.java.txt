@@ -1,0 +1,97 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "project_table", catalog="project_db")
+public class Participant 
+{
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int participantId;
+	
+	private String name;
+	private String dept;
+	private String yearOfStudy;
+	private String college;
+	private String email;
+	private String typeOfEvent;
+	
+	public Participant()
+	{
+		
+	}
+
+	public Participant(int participantId, String name, String dept, String yearOfStudy, String college, String email,
+			String typeOfEvent) {
+		super();
+		this.participantId = participantId;
+		this.name = name;
+		this.dept = dept;
+		this.yearOfStudy = yearOfStudy;
+		this.college = college;
+		this.email = email;
+		this.typeOfEvent = typeOfEvent;
+	}
+
+	public int getParticipantId() {
+		return participantId;
+	}
+
+	public void setParticipantId(int participantId) {
+		this.participantId = participantId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	public String getYearOfStudy() {
+		return yearOfStudy;
+	}
+
+	public void setYearOfStudy(String yearOfStudy) {
+		this.yearOfStudy = yearOfStudy;
+	}
+
+	public String getCollege() {
+		return college;
+	}
+
+	public void setCollege(String college) {
+		this.college = college;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTypeOfEvent() {
+		return typeOfEvent;
+	}
+
+	public void setTypeOfEvent(String typeOfEvent) {
+		this.typeOfEvent = typeOfEvent;
+	}
+	
+}

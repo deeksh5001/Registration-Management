@@ -1,0 +1,85 @@
+package com.example.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.Participant;
+import com.example.demo.repository.ParticipantRepository;
+
+
+@Service
+public class ParticipantService 
+{
+	@Autowired
+	ParticipantRepository participantRepository;
+	
+	public Participant create(Participant participant)
+	{
+		return participantRepository.save(participant); 
+	}
+	
+	public void delete(int id)
+	{
+		participantRepository.deleteById(id);
+	}
+	
+	public Participant update(Participant participant)
+	{
+		return participantRepository.save(participant); 
+	}
+	
+	public Optional<Participant> getById(int id)
+	{
+		Optional<Participant> s1=participantRepository.findById(id);
+		return s1;
+	}
+	
+	
+	 //NORMAL SORT 
+	 public Iterable<Participant> sortParticipant(String fieldName)
+	{
+		return participantRepository.findAll(Sort.by(fieldName));
+			
+			//return pr.findAll(Sort.by(Direction.DESC,field);
+	}
+	 
+	//DOUBLE SORT
+	 public Iterable<Participant> sortByFields(String field1,String field2)
+	 {
+		 return  participantRepository.findAll(Sort.by(field1,field2));
+	 }
+	 
+	//NORMAL PAGINATION
+	public List<Participant> getPage(int p)
+	{
+			//PAGEABLE OBJECT
+			Pageable paging =PageRequest.of(p, 5);
+			
+			Page<Participant> o= participantRepository.findAll(paging);
+			//PAGE TYPE LIST
+			return o.getContent() ;
+			
+	}
+	
+	
+	//SORTED PAGES
+	public List<Participant> sortPage(String fieldName,int p_no)
+	{
+		Pageable paging =PageRequest.of(p_no, 5,Sort.by(fieldName));
+		Page<Participant> o= participantRepository.findAll(paging);
+		//PAGE TYPE LIST
+		return o.getContent() ;
+	}
+	
+	public List<Participant> getP1(String event)
+	{
+		return participantRepository.getParticipant(event);
+	}
+}
